@@ -5,14 +5,12 @@ const Thoughts = require('./Though');
 const ReactionSchema=new Schema({
    reactionId: {
        type: Schema.Types.ObjectId,
-       default: new ObjectId,
+       default: () => new Types.ObjectId(),
    },
    reactionBody:{
        type:String,
        required:true,
-       len:{
-
-       }
+       max:280
    },
    username:{
        type:String,
@@ -27,7 +25,7 @@ const ReactionSchema=new Schema({
 });
 ReactionSchema.virtual('reaction').get(function(){
      ref:Thoughts;
-})
+});
 
 
 module.exports=ReactionSchema;

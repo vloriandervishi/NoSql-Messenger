@@ -4,22 +4,22 @@ const ThoughtSchema= new Schema ({
 
     thoughtText: {
         type:String,
+        match:'/^.{1,280}$/', // string must between 1 to 280 charactsers
         required:true,
-        // len: {
-
-        // }
+        
     },
     createdAt:{
         type:Date,
         default:Date.now,
+        get: createdAt=>dateformat(createdAt)
     },
     username: {
         type:String,
         Required:true,
     },
-    reactions:{
-        type:
-    }
+    reactions:[{
+        type:String,
+    }]
 });
 
 const Thoughts= model('Thought', ThoughtSchema);

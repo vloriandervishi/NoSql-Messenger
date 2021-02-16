@@ -6,7 +6,7 @@ const UserSchema= new  Schema ({
       type: String,
       unique: true,
       required:true,
-      Trimmed:true
+      trim:true
       
       
   },
@@ -14,10 +14,7 @@ const UserSchema= new  Schema ({
       type: String,
       require:true,
       unique: true,
-      validate: {
-        validator: () => Promise.resolve(false),
-        message: 'Email validation failed'
-      }
+      match: [/.+@.+\..+/, 'Please enter a valid e-mail address']
   },
   thoughts: {
       type: Schema.Types.ObjectId,
