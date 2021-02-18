@@ -32,6 +32,20 @@ const UserController= {
         .then(cUser=> res.json(cUser))
         .catch(err=> res.json(err));
     },
+    updateUser({params,body},res){
+        User.findOneandUpdate({_d:params.id},body,{new:true,runValidators:true})
+        .then(updatedUser => {
+            if(!updatedUser){
+                res.status(404).json({message: 'No pizza found with this id!'});
+            }
+            res.json(updatedUser);
+        })
+        .catch(err=> res.json(err));
+    },
+    delUser({params},res){
+        del
+        
+    }
 
 };
 
