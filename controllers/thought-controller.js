@@ -66,9 +66,19 @@ const ThoughtController= {
 
     delThought({params},res){
        delThought.findOneandDelete({_id:params.id})
-       .then(delThought=>res.json(delThought))
-       .catch(err=> res.json(err));
-        
+       .then(delThought=>{
+         if(!delThought){
+             res.status(404).json({message: 'no user with this id '});
+             return;
+         }
+         User.findOneandUpdate(
+            {username:delThought.username},
+             { $pull:{thought:params.id}}
+         ) .then(()=>{
+           res.json({message: 'Successfully deleted thought'});
+       })
+       .catch(err=> res.status(500).json(err));
+    }).catch(error=> res.status(500).json(err))  ;
     },
     
 };
