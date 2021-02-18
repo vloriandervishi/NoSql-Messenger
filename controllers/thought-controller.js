@@ -80,6 +80,37 @@ const ThoughtController= {
        .catch(err=> res.status(500).json(err));
     }).catch(error=> res.status(500).json(err))  ;
     },
+
+    affirmReaction({params,body},res){
+        Thought.findOneandUpdate({
+            _id:params.thoughtId
+        },
+        {$pull: {reactions:{reactionId: body.reactionId}}},
+        {new:true,runValidators:true})
+        .then(uThought =>{
+            if(!uThought){
+                res.status(400).json({message:'No thoughts found with this id'});
+                return;
+            }
+            res.json(uThought);
+
+        }).catch(err=> res.staus(500).json(err))
+    },
+    negateReaction({params,boy},res){
+        Thought.findOneAndUpdate(
+            {_id:params.thoughtId},
+            {$pull:{reactions:{reactionId: body.reactionId}}},
+            {new: true, runValidators:true}
+        ).then(nThReaction=>{
+            if(!nThReaction){
+                res.status(400).json({message:'No thought with this id'});
+                return;
+            }
+            res.json({message:'Deleted thoughts with no problem'};
+
+        }).catch(err=>res.status(500).json(err));
+
+    }
     
 };
 
