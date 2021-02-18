@@ -20,12 +20,18 @@ const ReactionSchema=new Schema({
    createdAt:{
        type:Date,
        default:Date.now,
-    // use a getterto format timestamp
+       get:(createdAt)=> moment (createdAt).format('MMM DD,YYYY [at] hh:mm a')
+       
    }
+  
+},
+{
+    toJSON:{
+        getters:true
+    },
+    id:false
 });
-ReactionSchema.virtual('reaction').get(function(){
-     ref:Thoughts;
-});
+
 
 
 module.exports=ReactionSchema;
