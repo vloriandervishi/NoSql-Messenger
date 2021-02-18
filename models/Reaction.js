@@ -1,6 +1,6 @@
 const { ObjectId } = require('bson');
 const {Schema,model}=require('mongoose');
-const Thoughts = require('./Though');
+const Thoughts = require('./Thought');
 
 const ReactionSchema=new Schema({
    reactionId: {
