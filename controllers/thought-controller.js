@@ -1,5 +1,5 @@
 
-const {Thought}=require('../models');
+const {Thought,User,Reaction}=require('../models');
 
 const ThoughtController= {
     // getall Thoughts
@@ -34,26 +34,43 @@ const ThoughtController= {
     },
     createThought({body},res){
         Thought.create(body)
-        .then(cThought=> res.json(cThought))
-        .catch(err=> res.json(err));
+        .then(cThought=>{
+            User.findOneandUpdate(
+              {_id:body.userId},
+              {$push: {thoughts: cThought._id}},
+              {new:true},
+            ).then(userThoughtData=>{
+                if(!userThoughtData){
+                    res.status(404).json({message:'No user found with this id'});
+                    return;
+                }
+                res.json(userThoughtData);
+            }).catch(err=> res.json(err));
+        })
     },
     updateThought({params,body},res){
-        Thought.findOneandUpdate({_d:params.id},body,{new:true,runValidators:true})
+        Thought.findOneandUpdate
+        ({_id:params.id},
+            body,
+            {new:true})
         .then(updatedThought => {
             if(!updatedThought){
                 res.status(404).json({message: 'No pizza found with this id!'});
+                return;
             }
             res.json(updatedThought);
-        })
-        .catch(err=> res.json(err));
+        }).catch(err=> res.status(400));
     },
+    
+
+
     delThought({params},res){
        delThought.findOneandDelete({_id:params.id})
        .then(delThought=>res.json(delThought))
        .catch(err=> res.json(err));
         
-    }
-
+    },
+    
 };
 
 module.exports=ThoughtController;
