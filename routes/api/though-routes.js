@@ -1,5 +1,5 @@
  const router =require('express').Router();
- const {getAllThoughts,getThoughtById,createThought,updateThought,delThought}=require('../../controllers/thought-controller');
+ const {getAllThoughts,getThoughtById,createThought,updateThought,delThought,affirmReaction,negateReaction}=require('../../controllers/thought-controller');
 
  
  // Set up GET all and POST at /api/user
@@ -14,4 +14,9 @@
    .get(getThoughtById)
     .put(updateThought)
    .delete(delThought);
+
+router 
+   .router('/:thoughtId/reactions/')
+   .post(affirmReaction)
+   .delete(negateReaction);
  module.exports=router;

@@ -106,7 +106,7 @@ const ThoughtController= {
                 res.status(400).json({message:'No thought with this id'});
                 return;
             }
-            res.json({message:'Deleted thoughts with no problem'};
+            res.json({message:'Deleted thoughts with no problem'});
 
         }).catch(err=>res.status(500).json(err));
 
