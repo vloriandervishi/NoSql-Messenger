@@ -43,7 +43,9 @@ const UserController= {
         .catch(err=> res.json(err));
     },
     delUser({params},res){
-        del
+       delUser.findOneandDelete({_id:params.id})
+       .then(delUser=>res.json(delUser))
+       .catch(err=> res.json(err));
         
     }
 

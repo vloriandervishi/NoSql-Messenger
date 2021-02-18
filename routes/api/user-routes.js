@@ -1,5 +1,5 @@
  const router = require('express').Router();
- const {getAllUsers,getUserById,createUser}=require('../../controllers');
+ const {getAllUsers,getUserById,createUser,updateUser,delUser}=require('../../controllers');
 
  }
  // Set up GET all and POST at /api/pizzas
@@ -12,7 +12,7 @@
  router
    .route('/:id')
    .get(getUserById)
-  //  .put()
-  //  .delete();
+    .put(updateUser)
+   .delete(delUser);
  
  module.exports = router;
