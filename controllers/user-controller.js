@@ -75,6 +75,57 @@ const UserController = {
     })
       .catch((err) => res.json(err));
   },
+  confirmFriend({params},res){
+      User.findOneandUpdate(
+          {_id:params.userId},
+          {$addToset:{friends: params.friendId}},
+          {new:true,runValidators:true}
+      ).then(cF=>{
+          if(!cF){
+              res.status(400).json({message:'no user found with this id'})
+              return;
+          }
+          User.findOneandUpdate(
+            {_id:params.friendId},
+            {$addToset:{friends:params.userId}},
+            {new:true,runValidators:true}
+          ).then(cf2=>{
+              if(!cf2){
+                  res.status(400).json({message:"No user with the friend id"});
+                  return;
+              }
+              res.json(cf2);
+          }).catch(err=>res.status(400).json(err));
+      }).catch(err=>res.status(400).json(err));
+
+  },
+  unconfirmFriend({params},res){
+      User.findOneAndUpdate(
+          {_id:params.userId},
+          {$pull: {friends:params.userId}},
+          {new:true,runValidators:true}
+      ).then(uF=>{
+          if(!uF){
+              res.status(400).json({message:'no user found with this userid'});
+              return;
+          }
+          User.findOneAndUpdate(
+              {_id:params.friendId},
+              {$pull:{friends:params.userId}},
+              {new:true,runValidators:true}
+          ).then(uf2=>{
+              if(!uf2){
+                  res.status(400).json({message:'no user found with the friendId'});
+                  return;
+              }
+              res.json({message:'No user found with this friendId'});
+          }).catch(err=>{
+              res.status(400).json(err);
+          })
+      }).catch(err=>{
+          res.status(400).json(err);
+      })
+  }
 };
 
 module.exports = UserController;
