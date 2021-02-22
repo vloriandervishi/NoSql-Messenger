@@ -57,7 +57,7 @@ const UserController = {
       .catch((err) => res.json(err));
   },
   delUser({ params }, res) {
-    delUser
+    User
       .findOneandDelete({ _id: params.id })
       .then((delUser) => {
       if(!delUser){

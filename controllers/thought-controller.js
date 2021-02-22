@@ -96,7 +96,7 @@ const ThoughtController= {
 
         }).catch(err=> res.staus(500).json(err))
     },
-    negateReaction({params,boy},res){
+    negateReaction({params,body},res){
         Thought.findOneAndUpdate(
             {_id:params.thoughtId},
             {$pull:{reactions:{reactionId: body.reactionId}}},
