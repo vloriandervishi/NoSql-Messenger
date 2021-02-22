@@ -5,7 +5,6 @@ const ThoughtController= {
     // getall Thoughts
     getAllThoughts(req,res){
         Thought.find({})
-        .populate({path: 'reactions',select: '-__v'})
         .select('-__v')
         .then(FindThought=>res.json(FindThought))
         .catch(err=> {
@@ -15,9 +14,8 @@ const ThoughtController= {
     },
     // get Thought thoughts by id
     getThoughtById({params},res){
-        Thought.FindOne({_id:params.id})
-        .populate({path: 'reactions',select:'-__v'})
-        .select('-__v')
+        Thought.findOne({_id:params.thoughtId})
+        
         .then(ThoughtData=>{
             if(!ThoughtData){
                 res.status(404).json({message:'no Thought found with this id!'});
@@ -34,14 +32,14 @@ const ThoughtController= {
     },
     createThought({body},res){
         Thought.create(body)
-        .then(cThought=>{
-            User.findOneandUpdate(
+        .then(({_id})=>{
+           return User.findOneAndUpdate(
               {_id:body.userId},
-              {$push: {thoughts: cThought._id}},
+              {$push: {thoughts:_id}},
               {new:true},
             ).then(userThoughtData=>{
                 if(!userThoughtData){
-                    res.status(404).json({message:'No user found with this id'});
+                    res.status(404).json({message:'No User found with this id'});
                     return;
                 }
                 res.json(userThoughtData);
@@ -49,16 +47,16 @@ const ThoughtController= {
         })
     },
     updateThought({params,body},res){
-        Thought.findOneandUpdate({_id:params.id},
+        Thought.findOneAndUpdate({_id:params.thoughtId},
             body,
             {new:true})
         .then(updatedThought => {
             if(!updatedThought){
-                res.status(404).json({message: 'No pizza found with this id!'});
+                res.status(404).json({message: 'No thought found with this id!'});
                 return;
             }
             res.json(updatedThought);
-        }).catch(err=> res.status(400));
+        }).catch(err=> res.status(400).json(err));
     },
     
 
@@ -67,10 +65,10 @@ const ThoughtController= {
        Thought.findOneAndDelete({_id:params.id})
        .then(delThought=>{
          if(!delThought){
-             res.status(404).json({message: 'no user with this id '});
+             res.status(404).json({message: 'no thought with this id '});
              return;
          }
-         User.findOneandUpdate(
+         User.findOneAndUpdate(
             {username:delThought.username},
              { $pull:{thought:params.id}}
          ) .then(()=>{
@@ -81,14 +79,14 @@ const ThoughtController= {
     },
 
     affirmReaction({params,body},res){
-        Thought.findOneandUpdate({
+        Thought.findOneAndUpdate({
             _id:params.thoughtId
         },
         {$pull: {reactions:{reactionId: body.reactionId}}},
         {new:true,runValidators:true})
         .then(uThought =>{
             if(!uThought){
-                res.status(400).json({message:'No thoughts found with this id'});
+                res.status(400).json({message:'No reaction found with this id'});
                 return;
             }
             res.json(uThought);
@@ -102,7 +100,7 @@ const ThoughtController= {
             {new: true, runValidators:true}
         ).then(nThReaction=>{
             if(!nThReaction){
-                res.status(400).json({message:'No thought with this id'});
+                res.status(400).json({message:'No reaction with this id'});
                 return;
             }
             res.json({message:'Deleted thoughts with no problem'});

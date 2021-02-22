@@ -9,12 +9,13 @@ const ReactionSchema=new Schema({
    },
    reactionBody:{
        type:String,
-       required:true,
-       max:280
+       require:"Please enter Reaction",
+       minLength:1,
+       maxLength:280
    },
    username:{
        type:String,
-       required:true,
+       required:"Please enter username",
 
    },
    createdAt:{
@@ -29,7 +30,7 @@ const ReactionSchema=new Schema({
     toJSON:{
         getters:true
     },
-    id:false
+    
 });
 
 

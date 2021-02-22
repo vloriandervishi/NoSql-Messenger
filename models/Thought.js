@@ -8,7 +8,7 @@ const ThoughtSchema= new Schema ({
         type:String,
         min:1, // string must between 1 to 280 charactsers
         max:280,
-        required:true,
+        required:"Please enter a thought !",
         
     },
     createdAt:{
@@ -18,7 +18,7 @@ const ThoughtSchema= new Schema ({
     },
     username: {
         type:String,
-        Required:true,
+        required: "please enter a username!",
     },
     reactions:[ reactionSchema]
 
