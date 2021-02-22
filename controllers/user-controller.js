@@ -1,9 +1,18 @@
 const { User } = require("../models");
+const Thought = require("../models");
 
 const UserController = {
   // getall Users
   getAllUsers(req, res) {
     User.find({})
+      .populate({
+        path: "thoughts",
+        select: "-__v -username",
+      })
+      .populate({
+        path: "friends",
+        select: "-__v -thought",
+      })
       .select("-__v")
       .then((FindUser) => res.json(FindUser))
       .catch((err) => {
@@ -13,14 +22,14 @@ const UserController = {
   },
   // get User thoughts by id
   getUserById({ params }, res) {
-    User.findOne({ _id: params.id })
+    User.findOne({ _id: params.userId })
       .populate({
         path: "thought",
-        select: "-__v ",
+        select: "-__v -username",
       })
       .populate({
         path: "friends",
-        select: "-__v ",
+        select: "-__v  -thoughts",
       })
       .select("-__v")
       .then((userData) => {
@@ -44,7 +53,7 @@ const UserController = {
 
   updateUser({ params, body }, res) {
     User.findOneAndUpdate({ _id: params.userId }, body, {
-      new: true
+      new: true,
     })
       .then((updatedUser) => {
         if (!updatedUser) {
@@ -72,12 +81,14 @@ const UserController = {
           .catch((err) => {
             res.json(400).json(err);
           });
-      }) .catch((err) => res.json(err));
+      })
+      .catch((err) => res.json(err));
   },
   confirmFriend({ params }, res) {
-    User.findOneandUpdate(
+    console.log(params);
+    User.findOneAndUpdate(
       { _id: params.userId },
-      { $addToset: { friends: params.friendId } },
+      { $addToSet: { friends: params.friendId } },
       { new: true, runValidators: true }
     )
       .then((cF) => {
@@ -85,52 +96,30 @@ const UserController = {
           res.status(400).json({ message: "no user found with this id" });
           return;
         }
-        User.findOneandUpdate(
-          { _id: params.friendId },
-          { $addToset: { friends: params.userId } },
-          { new: true, runValidators: true }
-        )
-          .then((cf2) => {
-            if (!cf2) {
-              res.status(400).json({ message: "No user with the friend id" });
-              return;
-            }
-            res.json(cf2);
-          })
-          .catch((err) => res.status(400).json(err));
+        res.json({message:"Successfully added Friend"});
+        console.log(cF);
       })
-      .catch((err) => res.status(400).json(err));
+      .catch((err) => {
+        res.status(400).json(err);
+        console.log(err);
+      });
   },
   unconfirmFriend({ params }, res) {
     User.findOneAndUpdate(
       { _id: params.userId },
-      { $pull: { friends: params.userId } },
-      { new: true, runValidators: true }
+      { $pull: { friends: params.friendId } },
+      { new: true }
     )
       .then((uF) => {
         if (!uF) {
           res.status(400).json({ message: "no user found with this userid" });
           return;
         }
-        User.findOneAndUpdate(
-          { _id: params.friendId },
-          { $pull: { friends: params.userId } },
-          { new: true, runValidators: true }
-        )
-          .then((uf2) => {
-            if (!uf2) {
-              res
-                .status(400)
-                .json({ message: "no user found with the friendId" });
-              return;
-            }
-            res.json({ message: "No user found with this friendId" });
-          })
-          .catch((err) => {
-            res.status(400).json(err);
-          });
+        res.json({message: "Successfully removed Friend "});
+        console.log(uF);
       })
       .catch((err) => {
+        console.log(err);
         res.status(400).json(err);
       });
   },

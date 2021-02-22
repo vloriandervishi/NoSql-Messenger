@@ -29,7 +29,7 @@ const ReactionSchema=new Schema({
 {
     toJSON:{
         getters:true
-    },
+    }
     
 });
 
