@@ -49,8 +49,7 @@ const ThoughtController= {
         })
     },
     updateThought({params,body},res){
-        Thought.findOneandUpdate
-        ({_id:params.id},
+        Thought.findOneandUpdate({_id:params.id},
             body,
             {new:true})
         .then(updatedThought => {
@@ -65,7 +64,7 @@ const ThoughtController= {
 
 
     delThought({params},res){
-       delThought.findOneandDelete({_id:params.id})
+       Thought.findOneAndDelete({_id:params.id})
        .then(delThought=>{
          if(!delThought){
              res.status(404).json({message: 'no user with this id '});

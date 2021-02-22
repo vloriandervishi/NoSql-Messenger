@@ -1,4 +1,4 @@
-const { User, Thought } = require("../models");
+const { User} = require("../models");
 
 const UserController = {
   // getall Users
@@ -13,15 +13,16 @@ const UserController = {
   },
   // get User thoughts by id
   getUserById({ params }, res) {
-    User.FindOne({ _id: params.id })
+    User.findOne({ _id: params.id })
       .populate(
         {
           path: "thought",
-          select: "-__v",
-        },
+          select: "-__v ",
+        })
+        .populate(
         {
           path: "friends",
-          select: "-__v",
+          select: "-__v ",
         }
       )
       .select("-__v")
@@ -44,21 +45,19 @@ const UserController = {
       .catch((err) => res.json(err));
   },
   updateUser({ params, body }, res) {
-    User.findOneandUpdate({ _d: params.id }, body, {
-      new: true,
-      runValidators: true,
-    })
-      .then((updatedUser) => {
+    User.findOneandUpdate({ _id: params.id }, body, {
+      new: true
+    }).then((updatedUser) => {
         if (!updatedUser) {
-          res.status(404).json({ message: "No pizza found with this id!" });
+          res.status(404).json({ message: "No user found with this id!" });
+          return;
         }
         res.json(updatedUser);
       })
       .catch((err) => res.json(err));
   },
   delUser({ params }, res) {
-    User
-      .findOneandDelete({ _id: params.id })
+    User.findOneandDelete({ _id: params.id })
       .then((delUser) => {
       if(!delUser){
           res.status(400).json({message: 'no user found with this id'});
