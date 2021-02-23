@@ -30,6 +30,10 @@ WHEN I test API POST and DELETE routes in Insomnia Core
 THEN I am able to successfully create and delete reactions to thoughts and add and remove friends to a user’s friend list
 
 ```
+## Screenshot
+![Challenge 18 NoSql – Get All USers 2_22_2021 6_52_06 PM](https://user-images.githubusercontent.com/69487303/108789633-415e7c00-7540-11eb-8f52-47dbd1088ed3.png)
+
+
 
 ## Installation
 
